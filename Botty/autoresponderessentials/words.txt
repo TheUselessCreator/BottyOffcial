@@ -1,0 +1,8 @@
+hello=Hi there!
+bye=Goodbye!
+Botty=Whats up?
+Help=Need help? Use the /help command?
+Sigma=...
+Rizz=Who, Ya mean me?
+Easter Egg=Theres no easter eggs in botty 😡
+hi=hello!
