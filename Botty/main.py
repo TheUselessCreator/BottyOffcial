@@ -28,7 +28,8 @@ bot = commands.Bot(command_prefix='/', intents=intents)
 # Function to set the bot's status from status.txt
 async def set_status():
     try:
-        with open('assets/status.txt', 'r') as file:
+        status_path = os.path.join('assets', 'status.txt')
+        with open(status_path, 'r') as file:
             status_text = file.read().strip()
             if not status_text:
                 status_text = "Default status"  # Fallback status text
