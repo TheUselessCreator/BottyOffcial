@@ -28,7 +28,8 @@ bot = commands.Bot(command_prefix='/', intents=intents)
 # Function to set the bot's status from status.txt
 async def set_status():
     try:
-        with open('assets/status.txt', 'r') as file:
+        status_path = os.path.join(os.path.dirname(__file__), 'assets', 'status.txt')
+        with open(status_path, 'r') as file:
             status_text = file.read().strip()
             if not status_text:
                 status_text = "Default status"  # Fallback status text
@@ -54,7 +55,12 @@ async def on_ready():
 
 # Load commands from the commands folder
 async def load_commands():
-    for filename in os.listdir('./commands'):
+    commands_path = os.path.join(os.path.dirname(__file__), 'commands')
+    if not os.path.isdir(commands_path):
+        print(f"Commands directory not found: {commands_path}")
+        return
+
+    for filename in os.listdir(commands_path):
         if filename.endswith('.py'):
             try:
                 await bot.load_extension(f'commands.{filename[:-3]}')
