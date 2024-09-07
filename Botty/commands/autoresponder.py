@@ -6,14 +6,15 @@ import os
 class AutoResponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.autorespond_enabled = False  # Default state is disabled
+        self.autorespond_enabled = True  # Default state is disabled
         self.responses = self.load_responses()  # Load responses from the file
 
     def load_responses(self):
         """Load autoresponses from words.txt."""
         responses = {}
-        # Construct the path to words.txt
-        folder_path = os.path.join(os.path.dirname(__file__), 'autoresponderfolder', 'words.txt')
+        # Construct the path to words.txt, assuming it's in Botty/autoresponderfolder
+        base_path = os.path.dirname(os.path.dirname(__file__))  # Get the Botty folder
+        folder_path = os.path.join(base_path, 'autoresponderfolder', 'words.txt')
 
         try:
             with open(folder_path, 'r') as file:
