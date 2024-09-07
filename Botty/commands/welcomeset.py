@@ -28,13 +28,16 @@ class WelcomeSet(commands.Cog):
 
         channel = self.bot.get_channel(self.welcome_channel_id)
         if channel:
+            # Get the member count
+            member_count = member.guild.member_count
+
             # Create an embed message for the welcome
             embed = discord.Embed(
                 title="Welcome to the server!",
-                description=f"Welcome {member.mention}!\nYou are our **#{len(member.guild.members)}** user.\nThanks for joining!",
+                description=f"Welcome {member.mention}!\nYou are our **#{member_count}** member.\nThanks for joining!",
                 color=discord.Color.blue()
             )
-            embed.set_thumbnail(url=member.avatar.url)  # Show the user's avatar in the embed
+            embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)  # Show the user's avatar in the embed
             embed.set_footer(text=f"Joined on {member.joined_at.strftime('%Y-%m-%d')}")
 
             # Send the embed to the welcome channel
