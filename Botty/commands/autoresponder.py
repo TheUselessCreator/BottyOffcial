@@ -1,51 +1,59 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import os
 
 class AutoResponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.responses = {}
-        self.load_responses()
-        self.load_status()
+        self.autorespond_enabled = False  # Default state is disabled
+        self.responses = self.load_responses()  # Load responses from the file
 
     def load_responses(self):
-        """Load responses from words.txt."""
+        """Load autoresponses from words.txt."""
+        responses = {}
         try:
-            words_path = os.path.join(os.path.dirname(__file__), '..', 'autoresponderfolder', 'words.txt')
-            with open(words_path, 'r') as file:
-                for line in file:
+            with open('autoresponderfolder/words.txt', 'r') as file:
+                for line in file.readlines():
                     if '=' in line:
-                        trigger, response = line.strip().split('=', 1)
-                        self.responses[trigger.lower()] = response
-        except Exception as e:
-            print(f"Failed to load responses: {e}")
-
-    def load_status(self):
-        """Load auto-responder status from enabled.txt."""
-        try:
-            status_path = os.path.join(os.path.dirname(__file__), '..', 'autoresponderfolder', 'enabled.txt')
-            with open(status_path, 'r') as file:
-                status = file.read().strip().lower()
-                self.enabled = status == 'enabled'
-        except Exception as e:
-            print(f"Failed to load status: {e}")
-            self.enabled = False
+                        key, response = line.strip().split('=', 1)
+                        responses[key.lower()] = response
+        except FileNotFoundError:
+            print("words.txt file not found")
+        return responses
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        """Respond to messages based on the loaded responses."""
-        if not self.enabled:
-            return
-        
-        if message.author == self.bot.user:
-            return  # Ignore messages from the bot itself
+        """Respond to messages if autoresponder is enabled."""
+        if message.author.bot:
+            return  # Ignore bot messages
+        if not self.autorespond_enabled:
+            return  # If autoresponder is disabled, don't respond
 
-        content = message.content.lower()
-        for trigger, response in self.responses.items():
-            if trigger in content:
+        for word, response in self.responses.items():
+            if word.lower() in message.content.lower():
                 await message.channel.send(response)
                 break
+
+    @app_commands.command(name="autorespondenable", description="Enable the autoresponder")
+    async def autorespondenable(self, interaction: discord.Interaction):
+        """Enable the autoresponder."""
+        if not interaction.user.guild_permissions.administrator:
+            await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
+            return
+
+        self.autorespond_enabled = True
+        await interaction.response.send_message("Autoresponder has been enabled.", ephemeral=True)
+
+    @app_commands.command(name="autoresponddisable", description="Disable the autoresponder")
+    async def autoresponddisable(self, interaction: discord.Interaction):
+        """Disable the autoresponder."""
+        if not interaction.user.guild_permissions.administrator:
+            await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
+            return
+
+        self.autorespond_enabled = False
+        await interaction.response.send_message("Autoresponder has been disabled.", ephemeral=True)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(AutoResponder(bot))
