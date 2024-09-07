@@ -12,14 +12,17 @@ class AutoResponder(commands.Cog):
     def load_responses(self):
         """Load autoresponses from words.txt."""
         responses = {}
+        # Construct the path to words.txt
+        folder_path = os.path.join(os.path.dirname(__file__), 'autoresponderfolder', 'words.txt')
+
         try:
-            with open('autoresponderfolder/words.txt', 'r') as file:
+            with open(folder_path, 'r') as file:
                 for line in file.readlines():
                     if '=' in line:
                         key, response = line.strip().split('=', 1)
                         responses[key.lower()] = response
         except FileNotFoundError:
-            print("words.txt file not found")
+            print(f"words.txt file not found at {folder_path}")
         return responses
 
     @commands.Cog.listener()
