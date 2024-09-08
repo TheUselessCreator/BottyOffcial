@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 class JoinRole(commands.Cog):
     def __init__(self, bot):
@@ -22,19 +23,27 @@ class JoinRole(commands.Cog):
             except discord.HTTPException as e:
                 print(f"Failed to assign role {role.name} to {member.name}: {e}")
 
-    @commands.command(name="setjoinrole")
-    @commands.has_permissions(administrator=True)
-    async def set_join_role(self, ctx, role: discord.Role):
-        """Set the role to assign to new members."""
+    @app_commands.command(name="setjoinrole", description="Set the role to assign to new members")
+    @app_commands.describe(role="The role to assign to new members")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def set_join_role(self, interaction: discord.Interaction, role: discord.Role):
+        """Slash command to set the role to assign to new members."""
         self.join_role_id = role.id
-        await ctx.send(f"Join role has been set to {role.name}.")
+        await interaction.response.send_message(f"Join role has been set to {role.name}.", ephemeral=True)
 
-    @commands.command(name="clearjoinrole")
-    @commands.has_permissions(administrator=True)
-    async def clear_join_role(self, ctx):
-        """Clear the current join role."""
+    @app_commands.command(name="clearjoinrole", description="Clear the role for new members")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def clear_join_role(self, interaction: discord.Interaction):
+        """Slash command to clear the current join role."""
         self.join_role_id = None
-        await ctx.send("Join role has been cleared.")
+        await interaction.response.send_message("Join role has been cleared.", ephemeral=True)
+
+    async def cog_load(self):
+        # Syncing commands with the command tree
+        guild = discord.Object(id=YOUR_GUILD_ID)  # Replace with your guild ID if necessary
+        self.bot.tree.add_command(self.set_join_role, guild=guild)
+        self.bot.tree.add_command(self.clear_join_role, guild=guild)
+        await self.bot.tree.sync(guild=guild)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(JoinRole(bot))
