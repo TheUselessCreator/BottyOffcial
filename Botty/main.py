@@ -11,19 +11,24 @@ load_dotenv()
 # Initialize tracemalloc to track memory allocation
 tracemalloc.start()
 
-# Get the bot token from environment variables
+# Get the bot token and application ID from environment variables
 TOKEN = os.getenv('TOKEN')
+APPLICATION_ID = os.getenv('APPLICATION_ID')
 
 if not TOKEN:
     raise ValueError("Error: TOKEN environment variable not set. Please check your .env file.")
+
+if not APPLICATION_ID:
+    raise ValueError("Error: APPLICATION_ID environment variable not set. Please check your .env file.")
 
 # Set up Discord intents (including message content)
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True  # Needed for syncing slash commands
+intents.members = True  # Make sure member intent is enabled for roles and user management
 
-# Create the bot instance with command prefix and intents
-bot = commands.Bot(command_prefix='/', intents=intents)
+# Create the bot instance with command prefix, intents, and application_id
+bot = commands.Bot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
 
 # Function to set the bot's status from status.txt
 async def set_status():
@@ -46,7 +51,7 @@ async def on_ready():
     # Set status from the status.txt file
     await set_status()
 
-    # Sync slash commands
+    # Sync slash commands globally
     try:
         await bot.tree.sync()
         print("Slash commands synced successfully!")
