@@ -5,12 +5,13 @@ from discord import app_commands
 class ReactionRole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.reaction_roles = {}  # Dictionary to store reaction roles
+        self.reaction_roles = {}  # Store message_id, emoji, and role mappings
 
     @app_commands.command(name="reactionrole", description="Set up a reaction role in an embed")
     @app_commands.describe(role="The role to assign when a reaction is added", emoji="The emoji to react with", message="The message to display in the embed")
     async def reaction_role(self, interaction: discord.Interaction, role: discord.Role, emoji: str, message: str):
         """Set up a reaction role with a specific emoji."""
+        # Check for administrator permission
         if not interaction.user.guild_permissions.administrator:
             await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
             return
@@ -21,13 +22,13 @@ class ReactionRole(commands.Cog):
             description=message,
             color=discord.Color.blue()
         )
-        embed.set_footer(text="React to this message with the specified emoji to get the role.")
+        embed.set_footer(text=f"React with {emoji} to get the {role.name} role.")
 
         # Send the embed and add the reaction
         msg = await interaction.channel.send(embed=embed)
         await msg.add_reaction(emoji)
 
-        # Save the message ID, role, and emoji for future reference
+        # Store reaction role info in memory
         self.reaction_roles[msg.id] = {'role': role, 'emoji': emoji}
 
         await interaction.response.send_message(f"Reaction role set! React with {emoji} to get the {role.name} role.", ephemeral=True)
@@ -42,7 +43,7 @@ class ReactionRole(commands.Cog):
 
             if str(payload.emoji) == role_info['emoji']:
                 member = guild.get_member(payload.user_id)
-                if member is not None:
+                if member is not None and not member.bot:
                     await member.add_roles(role)
 
     @commands.Cog.listener()
@@ -55,7 +56,7 @@ class ReactionRole(commands.Cog):
 
             if str(payload.emoji) == role_info['emoji']:
                 member = guild.get_member(payload.user_id)
-                if member is not None:
+                if member is not None and not member.bot:
                     await member.remove_roles(role)
 
 async def setup(bot: commands.Bot):
