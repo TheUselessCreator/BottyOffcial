@@ -39,11 +39,10 @@ class JoinRole(commands.Cog):
         await interaction.response.send_message("Join role has been cleared.", ephemeral=True)
 
     async def cog_load(self):
-        # Syncing commands with the command tree
-        guild = discord.Object(id=YOUR_GUILD_ID)  # Replace with your guild ID if necessary
-        self.bot.tree.add_command(self.set_join_role, guild=guild)
-        self.bot.tree.add_command(self.clear_join_role, guild=guild)
-        await self.bot.tree.sync(guild=guild)
+        # Sync commands globally across all servers
+        self.bot.tree.add_command(self.set_join_role)
+        self.bot.tree.add_command(self.clear_join_role)
+        await self.bot.tree.sync()
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(JoinRole(bot))
