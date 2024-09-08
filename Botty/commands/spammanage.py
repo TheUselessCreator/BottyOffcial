@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 from collections import defaultdict
 import asyncio
 
@@ -7,69 +8,76 @@ class AntiSpam(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.message_count = defaultdict(int)  # Track messages per user per server
+        self.spam_threshold = 5  # Default max messages allowed in the time window
+        self.time_window = 10  # Default time window in seconds for spam detection
+        self.timeout_duration = 3600  # Timeout duration in seconds (1 hour)
         self.anti_spam_enabled = defaultdict(bool)  # Tracks anti-spam status per server
-        self.server_settings = defaultdict(lambda: {"spam_threshold": 5, "time_window": 10, "timeout_duration": 3600})  # Default settings per server
 
-    # Enable anti-spam command with custom settings
-    @commands.command(name="antispamenable")
+    @app_commands.command(name='antispamenable', description='Enable anti-spam for this server')
     @commands.has_permissions(administrator=True)
-    async def enable_antispam(self, ctx, spam_threshold: int, time_window: int, timeout_duration: int):
-        self.anti_spam_enabled[ctx.guild.id] = True
-        self.server_settings[ctx.guild.id] = {
-            "spam_threshold": spam_threshold,
-            "time_window": time_window,
-            "timeout_duration": timeout_duration
-        }
-        await ctx.send(f"Anti-spam has been enabled in this server with the following settings:\n"
-                       f"- Spam threshold: {spam_threshold} messages\n"
-                       f"- Time window: {time_window} seconds\n"
-                       f"- Timeout duration: {timeout_duration} seconds")
+    async def antispam_enable(self, interaction: discord.Interaction):
+        """Enable anti-spam for the server."""
+        self.anti_spam_enabled[interaction.guild.id] = True
+        await interaction.response.send_message("Anti-spam has been enabled for this server.", ephemeral=True)
 
-    # Disable anti-spam command
-    @commands.command(name="antispamdisable")
+    @app_commands.command(name='antispamdisable', description='Disable anti-spam for this server')
     @commands.has_permissions(administrator=True)
-    async def disable_antispam(self, ctx):
-        self.anti_spam_enabled[ctx.guild.id] = False
-        await ctx.send("Anti-spam has been disabled in this server.")
+    async def antispam_disable(self, interaction: discord.Interaction):
+        """Disable anti-spam for the server."""
+        self.anti_spam_enabled[interaction.guild.id] = False
+        await interaction.response.send_message("Anti-spam has been disabled for this server.", ephemeral=True)
 
-    # Listener for message events
+    @app_commands.command(name='setspammessages', description='Set the maximum number of messages allowed in the time window')
+    @commands.has_permissions(administrator=True)
+    @app_commands.describe(threshold="Maximum number of messages allowed")
+    async def set_spam_messages(self, interaction: discord.Interaction, threshold: int):
+        """Set the maximum number of messages allowed in the time window."""
+        if threshold <= 0:
+            await interaction.response.send_message("Threshold must be a positive number.", ephemeral=True)
+            return
+        
+        self.spam_threshold = threshold
+        await interaction.response.send_message(f"Spam threshold set to {threshold} messages.", ephemeral=True)
+
+    @app_commands.command(name='setspamtime', description='Set the time window for spam detection')
+    @commands.has_permissions(administrator=True)
+    @app_commands.describe(window="Time window in seconds")
+    async def set_spam_time(self, interaction: discord.Interaction, window: int):
+        """Set the time window in seconds for spam detection."""
+        if window <= 0:
+            await interaction.response.send_message("Time window must be a positive number.", ephemeral=True)
+            return
+        
+        self.time_window = window
+        await interaction.response.send_message(f"Time window set to {window} seconds.", ephemeral=True)
+
     @commands.Cog.listener()
-    async def on_message(self, message):
-        if not message.guild:
-            return  # Ignore DMs
-
+    async def on_message(self, message: discord.Message):
+        """Detect and handle spam messages."""
         if message.author.bot:
-            return  # Ignore bot messages
+            return
 
-        if not self.anti_spam_enabled[message.guild.id]:
-            return  # Ignore if anti-spam is disabled
-
-        user = message.author
         guild_id = message.guild.id
-        settings = self.server_settings[guild_id]
+        if guild_id not in self.anti_spam_enabled or not self.anti_spam_enabled[guild_id]:
+            return
 
-        # Increment message count for the user
-        self.message_count[(guild_id, user.id)] += 1
+        user_id = message.author.id
+        self.message_count[user_id] += 1
 
-        # Check if user exceeded spam threshold
-        if self.message_count[(guild_id, user.id)] >= settings["spam_threshold"]:
-            await message.delete()
-            await self.timeout_user(user, message.channel, settings["timeout_duration"])
-            self.message_count[(guild_id, user.id)] = 0  # Reset their count after action
+        # Check if the user has exceeded the spam threshold
+        if self.message_count[user_id] > self.spam_threshold:
+            try:
+                await message.author.timeout(reason="Exceeded spam threshold", duration=self.timeout_duration)
+                await message.delete()
+                await message.channel.send(f"{message.author.mention} has been timed out for spamming.")
+            except discord.Forbidden:
+                print(f"Failed to timeout {message.author.name} due to missing permissions.")
+            except Exception as e:
+                print(f"Error while processing anti-spam: {e}")
 
-        # Reset message count after the time window
-        await asyncio.sleep(settings["time_window"])
-        self.message_count[(guild_id, user.id)] -= 1
+        # Reset the count after the time window
+        await asyncio.sleep(self.time_window)
+        self.message_count[user_id] -= 1
 
-    async def timeout_user(self, user, channel, timeout_duration):
-        """ Timeout the user and notify them. """
-        try:
-            await user.timeout_for(discord.utils.utcnow(), timeout_duration)  # Timeout the user for the given duration
-            await channel.send(f"{user.mention} has been timed out for spamming for {timeout_duration} seconds.")
-        except discord.Forbidden:
-            await channel.send(f"Failed to timeout {user.mention}. I might not have the right permissions.")
-        except Exception as e:
-            print(f"Error while trying to timeout user: {e}")
-
-async def setup(bot):
+async def setup(bot: commands.Bot):
     await bot.add_cog(AntiSpam(bot))
