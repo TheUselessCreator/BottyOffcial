@@ -58,20 +58,24 @@ async def on_ready():
     except Exception as e:
         print(f"Failed to sync slash commands: {e}")
 
-# Load commands from the commands folder
+# Load commands from the commands folder recursively
 async def load_commands():
     commands_path = os.path.join(os.path.dirname(__file__), 'commands')
     if not os.path.isdir(commands_path):
         print(f"Commands directory not found: {commands_path}")
         return
 
-    for filename in os.listdir(commands_path):
-        if filename.endswith('.py'):
-            try:
-                await bot.load_extension(f'commands.{filename[:-3]}')
-                print(f'Loaded {filename} successfully.')
-            except Exception as e:
-                print(f'Failed to load {filename}: {e}')
+    for root, dirs, files in os.walk(commands_path):
+        for file in files:
+            if file.endswith('.py') and not file.startswith('__'):
+                # Construct the module name from the file path
+                module_path = os.path.relpath(root, commands_path).replace(os.path.sep, '.')
+                module_name = f'commands.{module_path}.{file[:-3]}' if module_path else f'commands.{file[:-3]}'
+                try:
+                    await bot.load_extension(module_name)
+                    print(f'Loaded {file} successfully.')
+                except Exception as e:
+                    print(f'Failed to load {file}: {e}')
 
 # Run the bot
 async def start_bot():
