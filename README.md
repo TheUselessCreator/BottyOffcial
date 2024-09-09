@@ -1,3 +1,8 @@
+# Links 
+**Before We continue please join our discord using the link below.**
+https://linktr.ee/TheBotBotty
+
+
 # Botty 🤖
 Botty is a customizable Discord bot built using Python and the discord.py library. This bot comes packed with a variety of features including anti-spam measures, emoji limits, and customizable commands to enhance your Discord server experience.
 
