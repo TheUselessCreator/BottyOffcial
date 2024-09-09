@@ -9,7 +9,7 @@ advanced security installed!
 |---------|--------------------|
 | 5.7.3   | :white_check_mark: |
 | 5.7.2   | :white_check_mark: |
-| 5.7.1   | :white_check_mark  |
+| 5.7.1   | :white_check_mark:  |
 | 5.7.0   | :white_check_mark: |
 | 5.6.x   | :white_check_mark: |
 | 5.5.x   | :white_check_mark: |
