@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import os
+import importlib
 from dotenv import load_dotenv
 import tracemalloc
 import asyncio
@@ -69,9 +70,15 @@ async def load_commands():
         for file in files:
             if file.endswith('.py') and not file.startswith('__'):
                 # Construct the module name from the file path
-                module_path = os.path.relpath(root, commands_path).replace(os.path.sep, '.')
-                module_name = f'commands.{module_path}.{file[:-3]}' if module_path else f'commands.{file[:-3]}'
+                relative_path = os.path.relpath(root, commands_path)
+                if relative_path == '.':
+                    module_name = f'commands.{file[:-3]}'
+                else:
+                    module_name = f'commands.{relative_path.replace(os.path.sep, ".")}.{file[:-3]}'
+                
                 try:
+                    # Dynamically import the module
+                    importlib.import_module(module_name)
                     await bot.load_extension(module_name)
                     print(f'Loaded {file} successfully.')
                 except Exception as e:
