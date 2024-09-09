@@ -6,14 +6,14 @@ import os
 class AutoResponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.autorespond_enabled = True  # Default state is disabled
+        self.autorespond_enabled = True  # Default state is enabled
         self.responses = self.load_responses()  # Load responses from the file
 
     def load_responses(self):
         """Load autoresponses from words.txt."""
         responses = {}
         # Construct the path to words.txt, assuming it's in Botty/autoresponderfolder
-        base_path = os.path.dirname(os.path.dirname(__file__))  # Get the Botty folder
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Get the Botty folder
         folder_path = os.path.join(base_path, 'autoresponderfolder', 'words.txt')
 
         try:
@@ -24,6 +24,8 @@ class AutoResponder(commands.Cog):
                         responses[key.lower()] = response
         except FileNotFoundError:
             print(f"words.txt file not found at {folder_path}")
+        except Exception as e:
+            print(f"An error occurred while loading responses: {e}")
         return responses
 
     @commands.Cog.listener()
