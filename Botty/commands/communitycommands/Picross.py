@@ -2,7 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-class PicrossCommand(app_commands.Cog):
+class PicrossCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -19,7 +19,10 @@ class PicrossCommand(app_commands.Cog):
         # Fill in the grid based on the number code
         for i in range(5):
             for j in range(5):
-                grid[i][j] = numbercode[i * 5 + j]
+                if numbercode[i * 5 + j] == '1':
+                    grid[i][j] = '🟦'  # Blue Square for filled
+                else:
+                    grid[i][j] = '⬜'  # White Square for empty
 
         # Format the grid into a string
         grid_string = '\n'.join(' '.join(row) for row in grid)
