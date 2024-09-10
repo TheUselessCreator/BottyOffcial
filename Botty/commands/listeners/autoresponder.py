@@ -13,8 +13,12 @@ class AutoResponder(commands.Cog):
         """Load autoresponses from words.txt."""
         responses = {}
         # Construct the path to words.txt, assuming it's in Botty/autoresponderfolder
-        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Get the Botty folder
-        folder_path = os.path.join(base_path, 'autoresponderfolder', 'words.txt')
+        base_path = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current script
+        # Assuming that 'autoresponderfolder' is a sibling directory to the current script's directory
+        folder_path = os.path.join(base_path, '..', 'autoresponderfolder', 'words.txt')
+        folder_path = os.path.abspath(folder_path)  # Convert to absolute path
+
+        print(f"Looking for words.txt at: {folder_path}")
 
         try:
             with open(folder_path, 'r') as file:
