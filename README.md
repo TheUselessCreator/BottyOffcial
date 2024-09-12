@@ -101,10 +101,6 @@ Here’s the adapted version for **Botty** without plugins yet:
 
 Stay tuned for future plugin releases, and once available, you'll be able to install them directly from Discord!
 
-# Join the community!
-
-Sure, here’s a “Join the Community!” section for **Botty**:
-
 # Join the Community!
 
 Get involved with the **Botty** community and stay up-to-date with the latest developments, features, and updates! Whether you want to contribute ideas, get support, or just chat with fellow Botty users, our community is the place to be.
