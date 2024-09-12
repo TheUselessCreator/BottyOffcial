@@ -41,7 +41,7 @@ Here's a similar overview for your bot "Botty":
 
 # Overview
 
-**Botty** is a highly flexible and modular bot, designed to adapt to any server's needs. Whether you're looking for a moderation bot, fun community interaction, or specialized features, Botty has it all. Best of all, **Botty is self-hosted**, meaning you have complete control over its functionality. No coding knowledge is required – all commands and settings are managed directly from Discord, making it easy to tailor Botty to your server's preferences.
+**Botty** is a highly flexible and modular bot, designed to adapt to any server's needs. Whether you're looking for a moderation bot, fun community interaction, or specialized features, Botty has it all. Best of all, **Botty is Partner Hosted**, meaning you have complete control over its functionality. No coding knowledge is required – all commands and settings are managed directly from Discord, making it easy to tailor Botty to your server's preferences.
 
 [Getting Started](https://discord.gg/NR4KP96Vra) is simple, and you can customize everything from commands to permissions right within Discord.
 
@@ -74,7 +74,7 @@ Here’s a version for **Botty**:
 **Botty** is simple, and you can customize everything from commands to permissions right within Discord.
 **Botty** is under continuous development, with an active community constantly creating new plugins and features for everyone to enjoy. Exciting new updates are regularly added. If you can’t [find](#plugin-index) the plugin you need, check out our Guide in our [Discord server](https://discord.gg/NR4KP96Vra) on building your own custom plugins!
 
-Join the conversation and get involved on our [Official Discord Server](#support-link)!
+Join the conversation and get involved on our [Official Discord Server](https://discord.gg/NR4KP96Vra)!
 
 Here’s the adapted version for **Botty**:
 
@@ -100,3 +100,17 @@ Here’s the adapted version for **Botty** without plugins yet:
 - And much more!
 
 Stay tuned for future plugin releases, and once available, you'll be able to install them directly from Discord!
+
+# Join the community!
+
+Sure, here’s a “Join the Community!” section for **Botty**:
+
+# Join the Community!
+
+Get involved with the **Botty** community and stay up-to-date with the latest developments, features, and updates! Whether you want to contribute ideas, get support, or just chat with fellow Botty users, our community is the place to be.
+
+- **Join our [Official Discord Server](https://discord.gg/NR4KP96Vra)** to connect with other Botty users and developers, share your feedback, and get help.
+- **Check out our [Hosting Service](https://www.pella.app/)** for your best hosting service!
+- **Check out our [GitHub](https://github.com/TheUselessCreator)** for the latest releases, source code, and contributions.
+
+We look forward to seeing you in the community and helping make **Botty** even better!
