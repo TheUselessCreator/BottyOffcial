@@ -59,11 +59,11 @@ async def on_ready():
     except Exception as e:
         print(f"Failed to sync slash commands: {e}")
 
-# Load commands from the commands folder recursively
-async def load_commands():
-    commands_path = os.path.join(os.path.dirname(__file__), 'commands')
+# Load commands from a given folder recursively
+async def load_commands_from_folder(folder_name):
+    commands_path = os.path.join(os.path.dirname(__file__), folder_name)
     if not os.path.isdir(commands_path):
-        print(f"Commands directory not found: {commands_path}")
+        print(f"{folder_name} directory not found: {commands_path}")
         return
 
     for root, dirs, files in os.walk(commands_path):
@@ -72,21 +72,26 @@ async def load_commands():
                 # Construct the module name from the file path
                 relative_path = os.path.relpath(root, commands_path)
                 if relative_path == '.':
-                    module_name = f'commands.{file[:-3]}'
+                    module_name = f'{folder_name}.{file[:-3]}'
                 else:
-                    module_name = f'commands.{relative_path.replace(os.path.sep, ".")}.{file[:-3]}'
+                    module_name = f'{folder_name}.{relative_path.replace(os.path.sep, ".")}.{file[:-3]}'
                 
                 try:
                     # Dynamically import the module
                     importlib.import_module(module_name)
                     await bot.load_extension(module_name)
-                    print(f'Loaded {file} successfully.')
+                    print(f'Loaded {file} successfully from {folder_name}.')
                 except Exception as e:
-                    print(f'Failed to load {file}: {e}')
+                    print(f'Failed to load {file} from {folder_name}: {e}')
+
+# Load commands from the commands and PrefixCommands folders
+async def load_commands():
+    await load_commands_from_folder('commands')
+    await load_commands_from_folder('PrefixCommands')
 
 # Run the bot
 async def start_bot():
-    # Load commands from the commands folder
+    # Load commands from the commands folders
     await load_commands()
 
     try:
