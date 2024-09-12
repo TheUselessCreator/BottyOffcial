@@ -15,9 +15,6 @@
   <a href="https://github.com/TheUselessCreator">
     <img src="https://img.shields.io/github/actions/workflow/status/Cog-Creators/Red-Discordbot/tests.yml?label=tests" alt="GitHub">
   </a>
-  <a href="http://docs.discord.red/en/stable/?badge=stable">
-    <img src="https://readthedocs.org/projects/red-discordbot/badge/?version=stable" alt="Red on readthedocs.org">
-  </a>
   <a href="http://makeapullrequest.com">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg">
   </a>
