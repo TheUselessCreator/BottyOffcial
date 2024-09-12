@@ -34,8 +34,6 @@
   <a href="#license">License</a>
 </p>
 
-Here's a similar overview for your bot "Botty":
-
 # Overview
 
 **Botty** is a highly flexible and modular bot, designed to adapt to any server's needs. Whether you're looking for a moderation bot, fun community interaction, or specialized features, Botty has it all. Best of all, **Botty is Partner Hosted**, meaning you have complete control over its functionality. No coding knowledge is required – all commands and settings are managed directly from Discord, making it easy to tailor Botty to your server's preferences.
