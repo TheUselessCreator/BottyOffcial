@@ -43,7 +43,7 @@ Here's a similar overview for your bot "Botty":
 
 **Botty** is a highly flexible and modular bot, designed to adapt to any server's needs. Whether you're looking for a moderation bot, fun community interaction, or specialized features, Botty has it all. Best of all, **Botty is self-hosted**, meaning you have complete control over its functionality. No coding knowledge is required – all commands and settings are managed directly from Discord, making it easy to tailor Botty to your server's preferences.
 
-[Getting Started]() is simple, and you can customize everything from commands to permissions right within Discord.
+[Getting Started](https://discord.gg/NR4KP96Vra) is simple, and you can customize everything from commands to permissions right within Discord.
 
 **Key Features of Botty include, but are not limited to:**
 
@@ -56,3 +56,47 @@ Here's a similar overview for your bot "Botty":
 - **Command Permissions**: Fully customizable permissions for different roles and users.
 
 Botty can be the ultimate server moderator, a fun game master, or both!
+
+Here’s a similar installation guide for **Botty**:
+
+# Installation
+
+**Botty** is easy to set up and is officially supported on the following platforms:
+
+- [Windows](#windows-installation-guide)
+- [MacOS](#macos-installation-guide)
+- [Most major Linux distributions](#linux-installation-guide)
+
+For step-by-step installation instructions, click on your platform's link above. If you encounter any issues or need further assistance, don’t hesitate to join the [Official Botty Support Server](https://discord.gg/NR4KP96Vra) and ask for help in the **#support** channel. Our community and support team will be happy to assist you!
+
+Here’s a version for **Botty**:
+
+**Botty** is simple, and you can customize everything from commands to permissions right within Discord.
+**Botty** is under continuous development, with an active community constantly creating new plugins and features for everyone to enjoy. Exciting new updates are regularly added. If you can’t [find](#plugin-index) the plugin you need, check out our Guide in our [Discord server](https://discord.gg/NR4KP96Vra) on building your own custom plugins!
+
+Join the conversation and get involved on our [Official Discord Server](#support-link)!
+
+Here’s the adapted version for **Botty**:
+
+# License
+
+**Botty** is released under the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
+
+Botty is a unique creation, developed with the goal of making Discord servers more fun and interactive. Any artwork or assets used in this project have been contributed by community members or are licensed accordingly.
+
+This project also includes the [discord.ext.menus](https://github.com/Rapptz/discord-ext-menus) package, created by Danny Y. (Rapptz), which is distributed under the MIT License. You can find a copy of this license in the `discord-ext-menus.LICENSE` file located in the relevant directory of this repository.
+
+Here’s the adapted version for **Botty** without plugins yet:
+
+# Plugins
+
+**Botty** is designed to be fully modular, allowing you to load and unload plugins of your choice as they become available. While there are no plugins yet, Botty's framework is ready to support a wide variety of features in the future, such as:
+
+- Advanced moderation
+- Welcome messages
+- Reaction roles
+- Games
+- Slow Mode
+- And much more!
+
+Stay tuned for future plugin releases, and once available, you'll be able to install them directly from Discord!
