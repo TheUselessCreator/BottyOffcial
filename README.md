@@ -1,57 +1,58 @@
-# Links 
-**Before We continue please join our discord using the link below.**
-https://linktr.ee/TheBotBotty
+<h1 align="center">
+  <br>
+  <a href="https://github.com/TheUselessCreator/BottyOfficial/tree/main/develop"><img src="https://imgur.com/pY1WUFX.png" alt="Red - Discord Bot"></a>
+  <br>
+  Red Discord Bot
+  <br>
+</h1>
 
+<h4 align="center">Music, Moderation, Trivia, Stream Alerts and Fully Modular.</h4>
 
-# Botty 🤖
-Botty is a customizable Discord bot built using Python and the discord.py library. This bot comes packed with a variety of features including anti-spam measures, emoji limits, and customizable commands to enhance your Discord server experience.
+<p align="center">
+  <a href="https://discord.gg/red">
+    <img src="https://discordapp.com/api/guilds/133049272517001216/widget.png?style=shield" alt="Discord Server">
+  </a>
+  <a href="https://pypi.org/project/Red-DiscordBot/">
+     <img alt="PyPI" src="https://img.shields.io/pypi/v/Red-Discordbot">
+  </a>
+  <a href="https://www.python.org/downloads/">
+    <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/Red-Discordbot">
+  </a>
+  <a href="https://github.com/Rapptz/discord.py/">
+     <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
+  </a>
+  <a href="https://www.patreon.com/Red_Devs">
+    <img src="https://img.shields.io/badge/Support-Red!-red.svg" alt="Support Red on Patreon!">
+  </a>
+</p>
+<p align="center">
+  <a href="https://github.com/Cog-Creators/Red-DiscordBot/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/Cog-Creators/Red-Discordbot/tests.yml?label=tests" alt="GitHub Actions">
+  </a>
+  <a href="http://docs.discord.red/en/stable/?badge=stable">
+    <img src="https://readthedocs.org/projects/red-discordbot/badge/?version=stable" alt="Red on readthedocs.org">
+  </a>
+  <a href="https://github.com/psf/black">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style: Black">
+  </a>
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg">
+  </a>
+  <a href="https://crowdin.com/project/red-discordbot">
+    <img src="https://d322cqt584bo4o.cloudfront.net/red-discordbot/localized.svg" alt="Localized with Crowdin">
+  </a>
+</p>
 
-# Features
-Anti-Spam Detection: Automatically timeout users who exceed a certain number of messages in a time window.
-Emoji Limit: Limit the number of emojis users can send in a message, and automatically delete messages that exceed the limit.
-Custom Commands: Easily add custom commands to fit the needs of your server.
-Admin Commands: Enable or disable specific features such as anti-spam and emoji limits.
-Role Management: Manage roles and permissions with admin-only commands.
-Requirements
-Python 3.8+
-discord.py 2.0+
-asyncio
-# Installation
-Clone the repository:
-bash
-Copy code
-git clone https://github.com/TheUselessCreator/BottyOffcial
-cd botty
-# Install dependencies:
-bash
-Copy code
-pip install -r requirements.txt
-Set up your bot token:
-Create a .env file in the project root and add your bot token like so:
-
-# makefile
-Copy code
-DISCORD_TOKEN=your-discord-bot-token
-# Run the bot:
-bash
-Copy code
-python botty.py
-# Commands
-Admin Commands
-/antispamenable: Enable anti-spam for the server.
-/antispamdisable: Disable anti-spam for the server.
-/emojilimitenable (amount): Enable an emoji limit for the server.
-/emojilimitdisable: Disable the emoji limit.
-/kick (user): Kick a user from the server.
-/ban (user): Ban a user from the server.
-Utility Commands
-/say (message) (channel): Make the bot send a message to the specified channel.
-/deletemessages (amount) (channel): Bulk delete messages from a channel.
-# Contributing
-Contributions are welcome! Feel free to submit issues or pull requests. Make sure to fork the repository and work on a new branch before submitting any pull requests.
-
-# License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-# Contact
-If you have any questions or issues, please contact me via Discord: theuselesscreator_offical or open an issue on GitHub.
+<p align="center">
+  <a href="#overview">Overview</a>
+  •
+  <a href="#installation">Installation</a>
+  •
+  <a href="http://docs.discord.red/en/stable/index.html">Documentation</a>
+  •
+  <a href="#plugins">Plugins</a>
+  •
+  <a href="#join-the-community">Community</a>
+  •
+  <a href="#license">License</a>
+</p>
