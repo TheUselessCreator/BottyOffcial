@@ -8,7 +8,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get the Discord user ID from the .env file
-USER_ID = int(os.getenv("DISCORD_USER_ID"))
+USER_ID = os.getenv("USER_ID")
+if USER_ID is None:
+    raise ValueError("USER_ID environment variable is not set.")
+USER_ID = int(USER_ID)
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -26,7 +29,7 @@ class GetServerInviteCommand(commands.Cog):
         if interaction.user.id != USER_ID:
             await interaction.response.send_message("You are not authorized to use this command.", ephemeral=True)
             return
-        
+
         guild = self.bot.get_guild(server_id)
         if not guild:
             await interaction.response.send_message("I am not in that server, please check the server ID.", ephemeral=True)
