@@ -1,37 +1,34 @@
 import discord
 from discord.ext import commands
+import json
 import os
-import importlib
-from dotenv import load_dotenv
-import tracemalloc
 import asyncio
+from dotenv import load_dotenv
 
-# Load environment variables from the .env file
+# Load environment variables
 load_dotenv()
 
-# Initialize tracemalloc to track memory allocation
-tracemalloc.start()
+# Load prefixes from JSON file
+def load_prefixes():
+    if os.path.exists('prefixes.json'):
+        with open('prefixes.json', 'r') as f:
+            return json.load(f)
+    else:
+        return {}
 
-# Get the bot token and application ID from environment variables
-TOKEN = os.getenv('TOKEN')
-APPLICATION_ID = os.getenv('APPLICATION_ID')
+# Function to dynamically get the prefix for each guild
+async def get_prefix(bot, message):
+    prefixes = load_prefixes()
+    guild_id = str(message.guild.id)
+    return prefixes.get(guild_id, "/")  # Default to "/" if no custom prefix is set
 
-if not TOKEN:
-    raise ValueError("Error: TOKEN environment variable not set. Please check your .env file.")
-
-if not APPLICATION_ID:
-    raise ValueError("Error: APPLICATION_ID environment variable not set. Please check your .env file.")
-
-# Set up Discord intents (including message content)
+# Initialize bot with dynamic prefix getter
 intents = discord.Intents.default()
 intents.message_content = True
-intents.guilds = True  # Needed for syncing slash commands
-intents.members = True  # Make sure member intent is enabled for roles and user management
 
-# Create the bot instance with command prefix, intents, and application_id
-bot = commands.Bot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
+bot = commands.Bot(command_prefix=get_prefix, intents=intents)
 
-# Function to set the bot's status from status.txt
+# Function to set the bot's status
 async def set_status():
     try:
         status_path = os.path.join(os.path.dirname(__file__), 'assets', 'status.txt')
@@ -48,63 +45,38 @@ async def set_status():
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name} ({bot.user.id})')
-
-    # Set status from the status.txt file
     await set_status()
-
-    # Sync slash commands globally
     try:
         await bot.tree.sync()
         print("Slash commands synced successfully!")
     except Exception as e:
         print(f"Failed to sync slash commands: {e}")
 
-# Load commands from a given folder recursively
-async def load_commands_from_folder(folder_name):
-    commands_path = os.path.join(os.path.dirname(__file__), folder_name)
-    if not os.path.isdir(commands_path):
-        print(f"{folder_name} directory not found: {commands_path}")
-        return
-
-    for root, dirs, files in os.walk(commands_path):
+# Setup function to load cogs from the commands folder
+async def load_cogs():
+    commands_path = os.path.join(os.path.dirname(__file__), 'commands')
+    for root, _, files in os.walk(commands_path):
         for file in files:
             if file.endswith('.py') and not file.startswith('__'):
-                # Construct the module name from the file path
                 relative_path = os.path.relpath(root, commands_path)
                 if relative_path == '.':
-                    module_name = f'{folder_name}.{file[:-3]}'
+                    module_name = f'commands.{file[:-3]}'
                 else:
-                    module_name = f'{folder_name}.{relative_path.replace(os.path.sep, ".")}.{file[:-3]}'
-                
+                    module_name = f'commands.{relative_path.replace(os.path.sep, ".")}.{file[:-3]}'
                 try:
-                    # Dynamically import the module
-                    importlib.import_module(module_name)
                     await bot.load_extension(module_name)
-                    print(f'Loaded {file} successfully from {folder_name}.')
+                    print(f'Loaded {file} successfully.')
                 except Exception as e:
-                    print(f'Failed to load {file} from {folder_name}: {e}')
-
-# Load commands from the commands and PrefixCommands folders
-async def load_commands():
-    await load_commands_from_folder('commands')
-    await load_commands_from_folder('PrefixCommands')
+                    print(f'Failed to load {file}: {e}')
 
 # Run the bot
-async def start_bot():
-    # Load commands from the commands folders
-    await load_commands()
-
+async def main():
+    await load_cogs()
     try:
-        await bot.start(TOKEN)
+        await bot.start(os.getenv('TOKEN'))
     except Exception as e:
         print(f"An error occurred while running the bot: {e}")
-        # Capture and display memory allocations on error
-        snapshot = tracemalloc.take_snapshot()
-        top_stats = snapshot.statistics('lineno')
-        print("Memory allocation snapshot at error:")
-        for index, stat in enumerate(top_stats[:10], start=1):
-            print(f"#{index}: {stat}")
 
-# Run the bot
+# Start the bot
 if __name__ == "__main__":
-    asyncio.run(start_bot())
+    asyncio.run(main())
