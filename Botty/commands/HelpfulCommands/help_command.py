@@ -38,10 +38,15 @@ class DropdownMenu(discord.ui.Select):
             ]
         }
 
-        # Respond with the commands for the selected category
+        # Respond with the commands for the selected category by editing the embed
         selected_category = self.values[0]
         commands_list = "\n".join([f"/{cmd}" for cmd in command_sets[selected_category]])
-        await interaction.response.send_message(f"**{selected_category} Commands:**\n{commands_list}")
+
+        # Create an updated embed with the selected category's commands
+        embed = discord.Embed(title=f"{selected_category} Commands", description=f"**Available Commands:**\n{commands_list}", color=discord.Color.blue())
+        embed.set_thumbnail(url=interaction.guild.me.display_avatar.url)  # Use bot's profile picture as thumbnail
+
+        await interaction.message.edit(embed=embed)  # Edit the original message's embed
 
 class DropdownView(discord.ui.View):
     def __init__(self):
@@ -54,8 +59,12 @@ class HelpCommandCog(commands.Cog):
 
     @app_commands.command(name="help", description="Get a list of categorized commands.")
     async def help_command(self, interaction: discord.Interaction):
-        # Send a message with the dropdown menu
-        await interaction.response.send_message("Select a command category to see available commands:", view=DropdownView())
+        # Create an initial embed with instructions
+        embed = discord.Embed(title="Botty Extra Help", description="Choose a category to get started!", color=discord.Color.green())
+        embed.set_thumbnail(url=interaction.guild.me.display_avatar.url)  # Use bot's profile picture as thumbnail
+
+        # Send the initial embed with the dropdown menu
+        await interaction.response.send_message(embed=embed, view=DropdownView())
 
 async def setup(bot):
     await bot.add_cog(HelpCommandCog(bot))
