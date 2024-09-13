@@ -14,13 +14,13 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="?", intents=intents)
 
-class InviteCommand(commands.Cog):
+class GetServerInviteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Define the /invite command
-    @app_commands.command(name="invite", description="Create an invite link for a specified server if the bot is a member.")
-    async def invite(self, interaction: discord.Interaction, server_id: int):
+    # Define the /getserverinvite command
+    @app_commands.command(name="getserverinvite", description="Create an invite link for a specified server if the bot is a member.")
+    async def getserverinvite(self, interaction: discord.Interaction, server_id: int):
         """Create an invite link for a specified server if the bot is a member."""
         # Check if the user is allowed to use the command
         if interaction.user.id != USER_ID:
@@ -42,4 +42,4 @@ class InviteCommand(commands.Cog):
 
 # Load the cog
 async def setup(bot):
-    await bot.add_cog(InviteCommand(bot))
+    await bot.add_cog(GetServerInviteCommand(bot))
