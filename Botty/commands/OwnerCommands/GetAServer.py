@@ -23,12 +23,16 @@ class GetServerInviteCommand(commands.Cog):
 
     # Define the /getserverinvite command
     @app_commands.command(name="getserverinvite", description="Create an invite link for a specified server if the bot is a member.")
+    @app_commands.describe(server_id="The ID of the server to create an invite for")
     async def getserverinvite(self, interaction: discord.Interaction, server_id: int):
         """Create an invite link for a specified server if the bot is a member."""
         # Check if the user is allowed to use the command
         if interaction.user.id != USER_ID:
             await interaction.response.send_message("You are not authorized to use this command.", ephemeral=True)
             return
+
+        # Debug: Print the server_id to the console
+        print(f"Received server_id: {server_id}")
 
         guild = self.bot.get_guild(server_id)
         if not guild:
