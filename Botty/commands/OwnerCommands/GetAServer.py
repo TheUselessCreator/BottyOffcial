@@ -21,43 +21,57 @@ class GetServerInviteCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Define the /getserverinvite command
     @app_commands.command(name="getserverinvite", description="Create an invite link for a specified server if the bot is a member.")
     async def getserverinvite(self, interaction: discord.Interaction, server_id: str):
         """Create an invite link for a specified server if the bot is a member."""
-        # Check if the user is allowed to use the command
         if interaction.user.id != USER_ID:
             await interaction.response.send_message("You are not authorized to use this command.", ephemeral=True)
             return
 
-        # Acknowledge the interaction first to avoid timeout
+        # Acknowledge the interaction to prevent timeout
         await interaction.response.defer(thinking=True)
 
-        # Debug: Print the server_id to ensure it's being passed correctly
-        print(f"Received server_id: {server_id}")
-
         try:
-            # Ensure the server_id is a valid integer
+            # Convert server_id to an integer
             server_id = int(server_id)
         except ValueError:
             await interaction.followup.send("Invalid server ID. Please provide a valid server ID.", ephemeral=True)
             return
 
-        # Get the guild (server) by ID
+        # Debug: Check if server_id is valid
+        print(f"Server ID received: {server_id}")
+
+        # Try to get the guild (server)
         guild = self.bot.get_guild(server_id)
         if not guild:
             await interaction.followup.send("I am not in that server, please check the server ID.", ephemeral=True)
             return
 
-        # Try to find a channel where the bot can create an invite
-        invite_channel = discord.utils.get(guild.text_channels, permissions_for=guild.me).permissions.create_instant_invite
+        # Debug: Check if guild is found
+        print(f"Guild found: {guild.name} (ID: {guild.id})")
+
+        # Find a text channel where the bot can create an invite
+        invite_channel = None
+        for channel in guild.text_channels:
+            if channel.permissions_for(guild.me).create_instant_invite:
+                invite_channel = channel
+                break
+
         if not invite_channel:
-            await interaction.followup.send("I cannot create an invite link in this server. Please check my permissions.", ephemeral=True)
+            await interaction.followup.send("I do not have permission to create an invite in any channel in that server.", ephemeral=True)
             return
 
-        # Create the invite
-        invite = await invite_channel.create_invite(max_age=3600)  # Invite link valid for 1 hour
-        await interaction.followup.send(f"Here is your invite link for {guild.name}: {invite}")
+        # Debug: Check if invite_channel is found
+        print(f"Invite channel found: {invite_channel.name} in {guild.name}")
+
+        try:
+            # Create the invite link
+            invite = await invite_channel.create_invite(max_age=3600)  # Invite link valid for 1 hour
+            await interaction.followup.send(f"Here is your invite link for {guild.name}: {invite}")
+        except Exception as e:
+            # If an error occurs while creating the invite
+            print(f"Error while creating invite: {e}")
+            await interaction.followup.send("An error occurred while trying to create an invite. Please try again later.", ephemeral=True)
 
 # Load the cog
 async def setup(bot):
