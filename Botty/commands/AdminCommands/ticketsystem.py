@@ -1,14 +1,15 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 from discord.ui import Button, View, Select, Modal, TextInput
 
 class TicketSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='ticketsetup')
-    @commands.has_permissions(administrator=True)
-    async def ticket_setup(self, ctx, channel: discord.TextChannel, role: discord.Role):
+    @app_commands.command(name='ticketsetup', description='Sets up the ticket system in a specified channel with a given staff role.')
+    @app_commands.checks.has_permissions(administrator=True)
+    async def ticket_setup(self, interaction: discord.Interaction, channel: discord.TextChannel, role: discord.Role):
         """Sets up the ticket system and sends the dropdown menu in the specified channel."""
         # Store channel and role in the bot's internal memory or a database/file if needed
         self.ticket_channel_id = channel.id
@@ -30,8 +31,8 @@ class TicketSystem(commands.Cog):
                 issue = self.values[0]
                 await interaction.response.send_message("Creating ticket...", ephemeral=True)
                 
-                ticket_channel = await ctx.guild.create_text_channel(f'ticket-{interaction.user.id}', category=ctx.channel.category)
-                await ticket_channel.set_permissions(ctx.guild.default_role, view_channel=False)
+                ticket_channel = await interaction.guild.create_text_channel(f'ticket-{interaction.user.id}', category=interaction.channel.category)
+                await ticket_channel.set_permissions(interaction.guild.default_role, view_channel=False)
                 await ticket_channel.set_permissions(role, view_channel=True)
                 await ticket_channel.set_permissions(interaction.user, view_channel=True)
 
