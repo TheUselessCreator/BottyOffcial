@@ -35,7 +35,7 @@ class Tickets(commands.Cog):
             em.add_field(name="`.delpingedrole <role_id>`", value="This command removes a role from the list of roles that are pinged when a new ticket is created. This command can only be run if you have an admin-level role for this bot.")
             em.add_field(name="`.addadminrole <role_id>`", value="This command gives all users with a specific role access to the admin-level commands for the bot, such as `.addpingedrole` and `.addaccess`. This command can only be run by users who have administrator permissions for the entire server.")
             em.add_field(name="`.deladminrole <role_id>`", value="This command removes access for all users with the specified role to the admin-level commands for the bot, such as `.addpingedrole` and `.addaccess`. This command can only be run by users who have administrator permissions for the entire server.")
-            em.set_footer(text="Code by: Deadshot")
+            em.set_footer(text="Code by: Useless")
 
             await ctx.send(embed=em)
         
@@ -44,7 +44,7 @@ class Tickets(commands.Cog):
             em = discord.Embed(title = " Tickets Help", description ="", color = 0x00a8ff)
             em.add_field(name="`.new <message>`", value="This creates a new ticket. Add any words after the command if you'd like to send a message when we initially create your ticket.")
             em.add_field(name="`.close`", value="Use this to close a ticket. This command only works in ticket channels.")
-            em.set_footer(text="Code by: deadshot")
+            em.set_footer(text="Code by: Useless")
 
             await ctx.send(embed=em)
 
