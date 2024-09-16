@@ -6,6 +6,8 @@ from discord.ui import Button, View, Modal, TextInput
 class TicketSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.ticket_channel_id = None
+        self.staff_role_id = None
 
     @app_commands.command(name='ticketsetup', description='Sets up the ticket system in a specified channel with a given staff role.')
     @app_commands.checks.has_permissions(administrator=True)
@@ -29,6 +31,7 @@ class TicketSystem(commands.Cog):
                 issue = self.values[0]
                 await interaction.response.send_message("Creating ticket...", ephemeral=True)
                 
+                # Create a new ticket channel
                 ticket_channel = await interaction.guild.create_text_channel(
                     f'ticket-{interaction.user.id}', 
                     category=interaction.channel.category
@@ -37,6 +40,7 @@ class TicketSystem(commands.Cog):
                 await ticket_channel.set_permissions(role, view_channel=True)
                 await ticket_channel.set_permissions(interaction.user, view_channel=True)
 
+                # Send embed with buttons to the ticket channel
                 embed = discord.Embed(
                     title="New Ticket",
                     description=f"**Issue:** {issue}\n**User:** {interaction.user.mention}",
@@ -51,6 +55,7 @@ class TicketSystem(commands.Cog):
                 await ticket_channel.send(embed=embed, view=TicketActions())
                 await interaction.user.send(f"Your ticket has been created: {ticket_channel.mention}")
 
+        # Send dropdown menu in the specified channel
         view = View()
         view.add_item(TicketDropdown())
         await channel.send("Please select your issue:", view=view)
