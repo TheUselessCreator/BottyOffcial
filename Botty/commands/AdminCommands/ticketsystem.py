@@ -29,7 +29,7 @@ class TicketSystem(commands.Cog):
 
             async def callback(self, interaction: discord.Interaction):
                 issue = self.values[0]
-                await interaction.response.send_message("Creating ticket...", ephemeral=True)
+                await interaction.response.send_message("Creating your ticket...", ephemeral=True)
                 
                 # Create a new ticket channel
                 ticket_channel = await interaction.guild.create_text_channel(
@@ -52,7 +52,11 @@ class TicketSystem(commands.Cog):
                 if staff_role:
                     embed.add_field(name="Staff Required", value=f"Ping: {staff_role.mention}")
 
-                await ticket_channel.send(embed=embed, view=TicketActions())
+                # Create a view for the buttons
+                view = TicketActions()
+
+                # Send the embed and buttons to the ticket channel
+                await ticket_channel.send(embed=embed, view=view)
                 await interaction.user.send(f"Your ticket has been created: {ticket_channel.mention}")
 
         # Send dropdown menu in the specified channel
