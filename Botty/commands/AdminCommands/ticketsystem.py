@@ -25,8 +25,11 @@ class TicketSystem(commands.Cog):
                 super().__init__(placeholder="Select an issue...", options=options)
 
             async def callback(self, interaction: discord.Interaction):
+                # Prevent interaction timeout issues
+                await interaction.response.defer()
+
                 issue = self.values[0]
-                await interaction.response.send_message("Creating your ticket...", ephemeral=True)
+                await interaction.followup.send("Creating your ticket...", ephemeral=True)
 
                 # Create a new ticket channel
                 category = channel.category  # Use the same category as the chosen channel
@@ -63,25 +66,31 @@ class TicketSystem(commands.Cog):
 
 class TicketActions(View):
     def __init__(self, staff_role):
-        super().__init__()
+        super().__init__(timeout=None)  # Set no timeout to avoid button expiration
         self.staff_role = staff_role
-        self.add_item(Button(label="Claim", style=discord.ButtonStyle.green, custom_id="claim_ticket"))
-        self.add_item(Button(label="Close", style=discord.ButtonStyle.red, custom_id="close_ticket_no_reason"))
-        self.add_item(Button(label="Close with Reason", style=discord.ButtonStyle.grey, custom_id="close_ticket_reason"))
+        self.claimed = False
 
     @discord.ui.button(label="Claim", style=discord.ButtonStyle.green)
     async def claim_ticket(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.staff_role not in interaction.user.roles:
             await interaction.response.send_message("You do not have permission to claim this ticket.", ephemeral=True)
         else:
-            await interaction.response.send_message("Ticket claimed!", ephemeral=True)
+            if not self.claimed:
+                self.claimed = True
+                await interaction.response.send_message("Ticket claimed!", ephemeral=True)
+            else:
+                await interaction.response.send_message("This ticket has already been claimed.", ephemeral=True)
 
     @discord.ui.button(label="Close", style=discord.ButtonStyle.red)
     async def close_ticket_no_reason(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
         await interaction.channel.delete(reason="Ticket closed by staff")
 
     @discord.ui.button(label="Close with Reason", style=discord.ButtonStyle.grey)
     async def close_ticket_reason(self, interaction: discord.Interaction, button: discord.ui.Button):
+        # Prevent interaction timeout issues
+        await interaction.response.defer()
+
         # Create a modal for the reason
         modal = CloseReasonModal()
         await interaction.response.send_modal(modal)
@@ -90,6 +99,7 @@ class CloseReasonModal(discord.ui.Modal, title="Close Ticket with Reason"):
     reason = discord.ui.TextInput(label="Reason", placeholder="Enter the reason for closing the ticket", required=True)
 
     async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         await interaction.channel.delete(reason=f"Ticket closed with reason: {self.reason.value}")
         await interaction.user.send(f"Your ticket has been closed with reason: {self.reason.value}")
 
